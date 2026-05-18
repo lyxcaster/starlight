@@ -47,4 +47,5 @@ public sealed class MechEquipmentActionSystem : SharedMechEquipmentActionSystem
 
         RemoveActions(ent, comp, mechComp.PilotSlot.ContainedEntity.Value);
     }
+
 }

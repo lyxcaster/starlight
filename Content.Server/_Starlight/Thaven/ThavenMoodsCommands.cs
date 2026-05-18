@@ -1,5 +1,7 @@
 using System.Linq;
 using Content.Server.Administration;
+using Content.Server.Database;
+using Content.Server.Preferences.Managers;
 using Content.Shared._Starlight.Thaven;
 using Content.Shared._Starlight.Thaven.Components;
 using Content.Shared.Administration;
@@ -105,11 +107,9 @@ public sealed class AdminMoodsCommand : ToolshedCommand
         if (TryComp<ThavenMoodsComponent>(input, out var moodsComponent))
         {
             var ent = (input, moodsComponent);
-            var mood = new ThavenMood
-            {
-                MoodName = title,
-                MoodDesc = description
-            };
+            var mood = new ThavenMood();
+            mood.MoodName = title;
+            mood.MoodDesc = description;
             _moods.AddMood(ent, mood);
         }
 

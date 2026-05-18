@@ -7,7 +7,7 @@ using Content.Shared.Atmos;
 using Content.Server.Chat.Systems;
 using Content.Shared.Damage.Systems;
 
-namespace Content.Server._Starlight.Antags.Abductor;
+namespace Content.Server.Starlight.Antags.Abductor;
 
 public sealed partial class AbductorSystem : SharedAbductorSystem
 {
@@ -27,14 +27,11 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
         { AbductorOrganType.Egg, TimeSpan.FromSeconds(120) },
         { AbductorOrganType.Spider, TimeSpan.FromSeconds(240) },
     };
-    private const float OrganUpdateInterval = 3f;
-    private const double OrganUpdateBudgetMs = 0.5;
-    private const int PassiveHealingPerType = -3;
 
     public void InitializeOrgans()
     {
         foreach (var specif in _prototypeManager.EnumeratePrototypes<DamageTypePrototype>())
-            _passiveHealing.DamageDict.Add(specif.ID, PassiveHealingPerType);
+            _passiveHealing.DamageDict.Add(specif.ID, -3);
 
         _stopwatch.Start();
     }
@@ -43,14 +40,14 @@ public sealed partial class AbductorSystem : SharedAbductorSystem
     {
         _delayAccumulator += frameTime;
 
-        if (_delayAccumulator < OrganUpdateInterval)
+        if (_delayAccumulator < 3f)
             return;
 
         _delayAccumulator = 0f;
         _stopwatch.Restart();
 
         var query = EntityQueryEnumerator<AbductorVictimComponent>();
-        while (query.MoveNext(out var uid, out var victim) && _stopwatch.Elapsed < TimeSpan.FromMilliseconds(OrganUpdateBudgetMs))
+        while (query.MoveNext(out var uid, out var victim) && _stopwatch.Elapsed < TimeSpan.FromMilliseconds(0.5))
         {
             if (victim.Organ == AbductorOrganType.None)
                 continue;

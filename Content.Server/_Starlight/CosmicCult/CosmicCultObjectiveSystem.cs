@@ -6,7 +6,7 @@ using Content.Shared.Warps;
 using Content.Server._Starlight.CosmicCult.Components;
 using Content.Shared._Starlight.CosmicCult.Roles;
 using Robust.Shared.Random;
-using Content.Server.Station.Systems;
+using Content.Server.Station.Systems; // Starlight
 
 namespace Content.Server._Starlight.CosmicCult;
 
@@ -16,7 +16,7 @@ public sealed class CosmicCultObjectiveSystem : EntitySystem
     [Dependency] private readonly NumberObjectiveSystem _number = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedRoleSystem _roles = default!;
-    [Dependency] private readonly StationSystem _station = default!;
+    [Dependency] private readonly StationSystem _station = default!; // Starlight
 
     public override void Initialize()
     {
@@ -36,6 +36,7 @@ public sealed class CosmicCultObjectiveSystem : EntitySystem
         if (args.Cancelled || !_roles.MindHasRole<CosmicColossusRoleComponent>(args.MindId))
             return;
 
+        // Starlight Start
         // Only pick beacons on the same owning station as the colossus.
         // This avoids selecting CentCom or unrelated grids that happen to have warp beacons.
         var station = args.Mind.CurrentEntity is { } currentEntity
@@ -47,12 +48,13 @@ public sealed class CosmicCultObjectiveSystem : EntitySystem
             args.Cancelled = true;
             return;
         }
+        // Starlight End
 
         var warps = new List<EntityUid>();
         var query = EntityQueryEnumerator<WarpPointComponent>();
         while (query.MoveNext(out var warpUid, out var warp))
         {
-            if (warp.Location != null && _station.GetOwningStation(warpUid) == station)
+            if (warp.Location != null && _station.GetOwningStation(warpUid) == station) // Starlight Edit: Added GetOwningStation
             {
                 warps.Add(warpUid);
             }
@@ -82,16 +84,24 @@ public sealed class CosmicCultObjectiveSystem : EntitySystem
     }
 
     private void OnGetEntropyProgress(Entity<CosmicEntropyConditionComponent> ent, ref ObjectiveGetProgressEvent args)
-        => args.Progress = Progress(ent.Comp.Siphoned, _number.GetTarget(ent.Owner));
+    {
+        args.Progress = Progress(ent.Comp.Siphoned, _number.GetTarget(ent.Owner));
+    }
 
     private void OnGetConversionProgress(Entity<CosmicConversionConditionComponent> ent, ref ObjectiveGetProgressEvent args)
-        => args.Progress = Progress(ent.Comp.Converted, _number.GetTarget(ent.Owner));
+    {
+        args.Progress = Progress(ent.Comp.Converted, _number.GetTarget(ent.Owner));
+    }
 
     private void OnGetTierProgress(Entity<CosmicTierConditionComponent> ent, ref ObjectiveGetProgressEvent args)
-        => args.Progress = Progress(ent.Comp.Tier, _number.GetTarget(ent.Owner));
+    {
+        args.Progress = Progress(ent.Comp.Tier, _number.GetTarget(ent.Owner));
+    }
 
     private void OnGetVictoryProgress(Entity<CosmicVictoryConditionComponent> ent, ref ObjectiveGetProgressEvent args)
-        => args.Progress = ent.Comp.Victory ? 1f : 0f;
+    {
+        args.Progress = ent.Comp.Victory ? 1f : 0f;
+    }
 
     private static float Progress(int recruited, int target)
     {

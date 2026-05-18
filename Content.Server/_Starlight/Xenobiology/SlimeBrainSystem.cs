@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+using Content.Server.NPC.Pathfinding;
 using Content.Shared._Starlight.Xenobiology;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Tag;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
@@ -33,18 +36,20 @@ public enum SlimeMood
 public sealed class SlimeBrainSystem : EntitySystem
 {
     [Dependency] private readonly IEntityManager _entManager = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly PathfindingSystem _pathfinding = default!;
 
     /// <summary>
     /// The set of food targets slimes can safely eat.
     /// </summary>
-    private readonly HashSet<EntityUid> _targetFood = [];
+    private HashSet<EntityUid> TargetFood = new();
 
     /// <summary>
     /// The locations marked by slimes indicating there may be food nearby.
     /// Specifically, if a slime eats a monkey at a spot, they will mark it as a known food location.
     /// If a slime arrived to the spot and doesn't find any food to eat, they will un-mark it.
     /// </summary>
-    private readonly HashSet<EntityCoordinates> _knownFoodLocations = [];
+    private HashSet<EntityCoordinates> KnownFoodLocations = new();
 
     /// <summary>
     /// How far to look for food at each slime.
@@ -92,7 +97,7 @@ public sealed class SlimeBrainSystem : EntitySystem
     {
         if (IsEdibleBySlimeTest(entity))
         {
-            _targetFood.Add(entity);
+            TargetFood.Add(entity);
             return true;
         }
 
@@ -107,7 +112,7 @@ public sealed class SlimeBrainSystem : EntitySystem
     {
         HashSet<EntityUid> targetsToReturn = new();
         HashSet<EntityUid> targetsToDelete = new();
-        foreach (var possibleTarget in _targetFood)
+        foreach (var possibleTarget in TargetFood)
         {
             if (IsEdibleBySlimeTest(possibleTarget))
             {
@@ -120,7 +125,7 @@ public sealed class SlimeBrainSystem : EntitySystem
         }
         foreach (var delete in targetsToDelete)
         {
-            _targetFood.Remove(delete);
+            TargetFood.Remove(delete);
         }
         return targetsToReturn;
     }
@@ -129,7 +134,7 @@ public sealed class SlimeBrainSystem : EntitySystem
     /// Adds a given coordinate to the known feeding spots set.
     /// </summary>
     /// <param name="coordinates">The feeding spot location to add.</param>
-    public void AddFeedingSpot(EntityCoordinates coordinates) => _knownFoodLocations.Add(coordinates);
+    public void AddFeedingSpot(EntityCoordinates coordinates) => KnownFoodLocations.Add(coordinates);
 
     /// <summary>
     /// Retrieves the set of feeding spots known to the slime brain.
@@ -138,7 +143,11 @@ public sealed class SlimeBrainSystem : EntitySystem
     /// YES I KNOW THIS IS A CLONE OPERATION GET OFF MY BACK
     public HashSet<EntityCoordinates> AcquireFeedingSpots()
     {
-        HashSet<EntityCoordinates> coordsToReturn = [.. _knownFoodLocations];
+        HashSet<EntityCoordinates> coordsToReturn = new();
+        foreach (var coord in KnownFoodLocations)
+        {
+            coordsToReturn.Add(coord);
+        }
 
         return coordsToReturn;
     }
@@ -148,12 +157,16 @@ public sealed class SlimeBrainSystem : EntitySystem
     /// </summary>
     /// <param name="entity">The slime entity.</param>
     public void SlimeSuccessfulEat(EntityUid entity)
-        => _knownFoodLocations.Add(_entManager.GetComponent<TransformComponent>(entity).Coordinates);
+    {
+        KnownFoodLocations.Add(_entManager.GetComponent<TransformComponent>(entity).Coordinates);
+    }
 
     /// <summary>
     /// Called by slimes if they couldn't find anything nearby to eat.
     /// </summary>
     /// <param name="entity">The slime entity.</param>
     public void SlimeUnsuccessfulFoodFind(EntityUid entity)
-        => _knownFoodLocations.Remove(_entManager.GetComponent<TransformComponent>(entity).Coordinates);
+    {
+        KnownFoodLocations.Remove(_entManager.GetComponent<TransformComponent>(entity).Coordinates);
+    }
 }

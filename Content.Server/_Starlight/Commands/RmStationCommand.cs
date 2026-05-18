@@ -37,9 +37,11 @@ public sealed class RmStationCommand : LocalizedCommands
     }
 
     public override CompletionResult GetCompletion(IConsoleShell shell, string[] args)
-    => args.Length switch
+    {
+        switch (args.Length)
         {
-            1 => CompletionResult.FromHintOptions(CompletionHelper.Components<StationDataComponent>(args[0], _entityManager), "Station Entities"),
-            _ => CompletionResult.Empty,
-    };
+            case 1: return CompletionResult.FromHintOptions(CompletionHelper.Components<StationDataComponent>(args[0], _entityManager), "Station Entities");
+        }
+        return CompletionResult.Empty;
+    }
 }

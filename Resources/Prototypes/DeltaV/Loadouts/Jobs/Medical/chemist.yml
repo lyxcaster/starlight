@@ -1,5 +1,0 @@
-﻿#Outer Clothing
-- type: loadout
-  id: ChemistLabCoatLong
-  equipment:
-    outerClothing: ClothingOuterCoatLabChemistLong

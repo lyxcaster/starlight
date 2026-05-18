@@ -205,7 +205,6 @@
       mindRoles:
       - MindRoleNukeopsCommander
       # Starlight-start
-      allowNonHumans: true
       tags:
         - CantBecomeRevolutionary
       # Starlight-end
@@ -227,7 +226,6 @@
       mindRoles:
       - MindRoleNukeopsMedic
       # Starlight-start
-      allowNonHumans: true
       tags:
         - CantBecomeRevolutionary
       # Starlight-end
@@ -251,7 +249,6 @@
       mindRoles:
       - MindRoleNukeops
       # Starlight-start
-      allowNonHumans: true
       tags:
         - CantBecomeRevolutionary
       # Starlight-end
@@ -294,7 +291,6 @@
         components:
         - AntagImmune
       lateJoinAdditional: false
-      allowNonHumans: true # Starlight; we have playable non-humanoids
       mindRoles:
       - MindRoleTraitor
 
@@ -309,7 +305,6 @@
   - type: AntagSelection
     definitions:
     - prefRoles: [ Traitor ]
-      allowNonHumans: true # Starlight; we have playable non-humanoids
       mindRoles:
       - MindRoleTraitorReinforcement
 
@@ -354,7 +349,6 @@
       mindRoles:
       - MindRoleChangeling
       # Starlight-start
-      allowNonHumans: false # unanticipated behavior possible for non-humanoid -> humanoid lings
       tags:
         - CantBecomeRevolutionary
       # Starlight-end
@@ -380,7 +374,6 @@
       max: 3
       playerRatio: 15
       startingGear: HeadRevGear
-      allowNonHumans: true # Starlight; we have playable non-humanoids
       components:
       - type: Revolutionary
       - type: HeadRevolutionary
@@ -465,7 +458,6 @@
       mindRoles:
       - MindRoleWizard
       # Starlight-start
-      allowNonHumans: true # We have playable non-humanoids
       tags:
         - CantBecomeRevolutionary
         - Wizard
@@ -489,7 +481,6 @@
     - prefRoles: [ InitialInfected ]
       max: 6
       playerRatio: 10
-      allowNonHumans: true # Starlight; we have playable non-humanoids
       blacklist:
         components:
         - ZombieImmune

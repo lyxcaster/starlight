@@ -33,8 +33,10 @@ public sealed class USSPUplinkSystem : EntitySystem
     /// Resets all stock-limited listings in the uplink catalog.
     /// </summary>
     private void OnRoundEnd(RoundEndSystemChangedEvent ev)
+    {
         // Reset all stock-limited listings in the uplink catalog
-        => ResetUplinkStocks();
+        ResetUplinkStocks();
+    }
 
     /// <summary>
     /// Resets all stock-limited listings in the uplink catalog.
@@ -84,6 +86,7 @@ public sealed class USSPUplinkSystem : EntitySystem
         // Update all uplink UIs to show the reset stock counts
         UpdateAllUplinkListings();
     }
+
 
     /// <summary>
     /// Synchronizes all uplinks in the game to ensure they have the correct currency values.

@@ -23,13 +23,13 @@ public sealed partial class ListingPlayerCountCondition : ListingCondition
     [DataField]
     public int Maximum = 500;
 
-    private static ISharedPlayerManager? s_playerManager;
+    private static ISharedPlayerManager? _playerManager;
 
     public override bool Condition(ListingConditionArgs args)
     {
-        s_playerManager ??= IoCManager.Resolve<ISharedPlayerManager>();
+        _playerManager ??= IoCManager.Resolve<ISharedPlayerManager>();
 
-        var playerCount = s_playerManager.PlayerCount;
+        var playerCount = _playerManager.PlayerCount;
 
         return playerCount >= Minimum && playerCount <= Maximum;
     }

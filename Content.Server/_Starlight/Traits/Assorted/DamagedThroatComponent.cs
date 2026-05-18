@@ -1,4 +1,6 @@
 using Content.Shared.Damage.Prototypes;
+using Content.Shared._Starlight.Language;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 

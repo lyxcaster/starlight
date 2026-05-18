@@ -41,9 +41,12 @@ public sealed class ServerTransferCommand : LocalizedCommands
     }
 
     public override CompletionResult GetCompletion(IConsoleShell shell, string[] args)
-    => args.Length switch
     {
-        1 => CompletionResult.FromHint("ss14://host:port"),
-        _ => CompletionResult.Empty,
-    };
+        switch (args.Length)
+        {
+            case 1:
+                return CompletionResult.FromHint("ss14://host:port");
+        }
+        return CompletionResult.Empty;
+    }
 }

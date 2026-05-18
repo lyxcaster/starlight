@@ -25,7 +25,7 @@ public sealed partial class FrenchAccentSystem : EntitySystem
         SubscribeLocalEvent<FrenchAccentComponent, AccentGetEvent>(OnAccentGet);
     }
 
-    public SpeechMessage Accentuate(SpeechMessage message, FrenchAccentComponent _)
+    public SpeechMessage Accentuate(SpeechMessage message, FrenchAccentComponent component)
     {
         message = _replacement.ApplyReplacements(message, "french");
 

@@ -322,7 +322,7 @@
         mech-gas-tank-slot:
           - MechAirTankFilled
 
-# NanoTrasen Combat Mechs
+# Nanotrasen Combat Mechs
 
 # Marauder
 - type: entity

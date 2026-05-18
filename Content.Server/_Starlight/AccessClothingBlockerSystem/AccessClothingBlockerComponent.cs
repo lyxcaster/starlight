@@ -1,6 +1,8 @@
+using Content.Shared.NPC.Prototypes;
 using Robust.Shared.Audio;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Set;
 
-namespace Content.Server._Starlight.FactionClothingBlockerSystem;
+namespace Content.Server.Starlight.FactionClothingBlockerSystem;
 
 [RegisterComponent]
 public sealed partial class AccessClothingBlockerComponent : Component

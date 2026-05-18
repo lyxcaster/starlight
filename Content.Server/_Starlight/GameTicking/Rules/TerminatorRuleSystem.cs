@@ -8,6 +8,7 @@ using Content.Server.Objectives.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Mind;
 using Content.Shared.Pinpointer;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Linq;
 
@@ -20,6 +21,10 @@ public sealed partial class TerminatorRuleSystem : GameRuleSystem<TerminatorRule
     [Dependency] private readonly EmpSystem _emp = default!;
     [Dependency] private readonly MindSystem _mind = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+
+    private EntProtoId TerminatorEntityPrototype = "MobHumanTerminator";
+    private EntProtoId PinpointerPrototype = "PinpointerTerminator";
+    private EntProtoId SpawnEffectPrototype = "EffectTerminatorChronospace";
 
     private const float EmpPower = 2.5f;
 
@@ -47,12 +52,12 @@ public sealed partial class TerminatorRuleSystem : GameRuleSystem<TerminatorRule
             ent.Comp.Target = newTarget.Owner;
         }
 
-        var terminator = Spawn(ent.Comp.TerminatorEntityPrototype);
+        var terminator = Spawn(TerminatorEntityPrototype);
         var targetOverride = EnsureComp<TargetOverrideComponent>(terminator);
         targetOverride.Target = ent.Comp.Target;
 
         // give the terminator a pinpointer that is pointing toward the target
-        var pinpointer = Spawn(ent.Comp.PinpointerPrototype);
+        var pinpointer = Spawn(PinpointerPrototype);
         _pinpointer.SetTarget(pinpointer, ent.Comp.TargetBody);
         _pinpointer.SetActive(pinpointer, true);
         if (!_inventory.TryEquip(terminator, pinpointer, "pinpointerpocket", force: true))
@@ -65,7 +70,7 @@ public sealed partial class TerminatorRuleSystem : GameRuleSystem<TerminatorRule
     {
         var spawnPosition = Transform(args.EntityUid).Coordinates;
 
-        Spawn(ent.Comp.SpawnEffectPrototype, spawnPosition);
+        Spawn(SpawnEffectPrototype, spawnPosition);
         _emp.EmpPulse(spawnPosition, EmpPower, 5000f, EmpPower * TimeSpan.FromSeconds(2));
     }
 

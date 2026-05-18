@@ -16,9 +16,6 @@ using Content.Shared.Timing;
 using Content.Shared.Traits.Assorted;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
-#region Starlight
-using Content.Shared.Damage;
-#endregion
 
 namespace Content.Shared.Medical;
 
@@ -208,9 +205,8 @@ public abstract class SharedDefibrillatorSystem : EntitySystem
         }
         else
         {
-            var zapHeal = new DamageSpecifier(ent.Comp.ZapHeal); // Starlight
             if (_mobState.IsDead(target, targetMobState))
-                _damageable.TryChangeDamage(target, zapHeal, true, origin: user); // Starlight Edit: Comp.ZapHeal to Copy
+                _damageable.TryChangeDamage(target, ent.Comp.ZapHeal, true, origin: user);
 
             if (TryComp<MobThresholdsComponent>(target, out var targetThresholds) &&
                 TryComp<DamageableComponent>(target, out var targetDamageable) &&

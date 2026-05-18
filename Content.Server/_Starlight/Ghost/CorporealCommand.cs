@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Server.Administration;
 using Content.Server.Ghost;
+using Content.Shared._Starlight.Ghost;
 using Content.Shared.Administration;
 using Content.Shared.Emoting;
 using Content.Shared.Eye;

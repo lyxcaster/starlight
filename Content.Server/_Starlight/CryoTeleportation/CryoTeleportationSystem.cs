@@ -1,5 +1,9 @@
+using System.Linq;
 using Content.Server.Bed.Cryostorage;
+using Content.Server.GameTicking;
+using Content.Server.Mind;
 using Content.Shared._Starlight.Polymorph.Components;
+using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
 using Content.Shared.Bed.Cryostorage;
 using Content.Shared.GameTicking;
@@ -19,7 +23,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Containers;
 using Content.Shared.Station.Components;
 
-namespace Content.Server._Starlight.CryoTeleportation;
+namespace Content.Server.Starlight.CryoTeleportation;
 
 public sealed class CryoTeleportationSystem : EntitySystem
 {
@@ -34,8 +38,8 @@ public sealed class CryoTeleportationSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
 
-    public TimeSpan _nextTick = TimeSpan.Zero;
-    private readonly TimeSpan _refreshCooldown = TimeSpan.FromSeconds(5);
+    public TimeSpan NextTick = TimeSpan.Zero;
+    public TimeSpan RefreshCooldown = TimeSpan.FromSeconds(5);
 
     public override void Initialize()
     {
@@ -47,10 +51,10 @@ public sealed class CryoTeleportationSystem : EntitySystem
 
     public override void Update(float delay)
     {
-        if (_nextTick > _timing.CurTime)
+        if (NextTick > _timing.CurTime)
             return;
 
-        _nextTick += _refreshCooldown;
+        NextTick += RefreshCooldown;
 
         var query = AllEntityQuery<TargetCryoTeleportationComponent, MobStateComponent>();
         while (query.MoveNext(out var uid, out var comp, out var mobStateComponent))
@@ -71,22 +75,22 @@ public sealed class CryoTeleportationSystem : EntitySystem
             if (stationGrid == null)
                 continue;
 
-            var cryoStorageResult = FindCryoStorage(Transform(stationGrid.Value));
+            var cryoStorage = FindCryoStorage(Transform(stationGrid.Value));
 
-            if (cryoStorageResult == null)
+            if (cryoStorage == null)
                 continue;
-
-            var (cryoStorage, container) = cryoStorageResult.Value;
 
             var containedComp = AddComp<CryostorageContainedComponent>(uid);
 
-            containedComp.Cryostorage = cryoStorage;
+            containedComp.Cryostorage = cryoStorage.Value;
             containedComp.GracePeriodEndTime = _timing.CurTime;
 
             var portalCoordinates = _transformSystem.GetMapCoordinates(Transform(uid));
 
             var portalUid = _entity.SpawnEntity(stationComp.PortalPrototype, portalCoordinates);
             _audio.PlayPvs(stationComp.TransferSound, portalUid);
+
+            var container = _container.EnsureContainer<ContainerSlot>(cryoStorage.Value, "storage");
 
             if (!_container.Insert(uid, container))
                 _cryostorage.HandleEnterCryostorage((uid, containedComp), comp.UserId);
@@ -113,7 +117,7 @@ public sealed class CryoTeleportationSystem : EntitySystem
             return;
         if (comp.ExitTime == null)
             comp.ExitTime = _timing.CurTime;
-        if (_mind.TryGetMind(uid, out var _, out var mind))
+        if (_mind.TryGetMind(uid, out var mindId, out var mind))
             comp.UserId = mind.UserId;
     }
 
@@ -121,7 +125,7 @@ public sealed class CryoTeleportationSystem : EntitySystem
     {
         if (comp.ExitTime != null)
             comp.ExitTime = null;
-        if (_mind.TryGetMind(uid, out var _, out var mind))
+        if (_mind.TryGetMind(uid, out var mindId, out var mind))
             comp.UserId = mind.UserId;
     }
 
@@ -138,7 +142,7 @@ public sealed class CryoTeleportationSystem : EntitySystem
         comp.UserId = args.Session.UserId;
     }
 
-    private (EntityUid Uid, ContainerSlot Container)? FindCryoStorage(TransformComponent stationGridTransform)
+    private EntityUid? FindCryoStorage(TransformComponent stationGridTransform)
     {
         var query = AllEntityQuery<CryostorageComponent, TransformComponent>();
         while (query.MoveNext(out var cryoUid, out _, out var cryoTransform))
@@ -151,7 +155,7 @@ public sealed class CryoTeleportationSystem : EntitySystem
             if (container.ContainedEntities.Count > 0)
                 continue;
 
-            return (cryoUid, container);
+            return cryoUid;
         }
 
         return null;

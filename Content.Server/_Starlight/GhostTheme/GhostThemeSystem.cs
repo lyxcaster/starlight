@@ -72,7 +72,10 @@ public sealed class GhostThemeSystem : EntitySystem
         Dirty(attached, themes);
 
         var playerData = _playerRoles.GetPlayerData(attached);
-        playerData?.GhostThemeColor = color;
+        if (playerData != null)
+        {
+            playerData.GhostThemeColor = color;
+        }
 
         _appearance.SetData(attached, GhostThemeVisualLayers.Color, color);
     }

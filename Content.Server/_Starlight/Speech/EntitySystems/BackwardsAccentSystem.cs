@@ -9,7 +9,7 @@ public sealed class BackwardsAccentSystem : EntitySystem
     public override void Initialize()
         => SubscribeLocalEvent<BackwardsAccentComponent, AccentGetEvent>(OnAccent);
 
-    public static string Accentuate(string message)
+    public string Accentuate(string message)
     {
         var arr = message.ToCharArray();
         Array.Reverse(arr);

@@ -69,6 +69,7 @@ public sealed class StationCrewStatisticsSystem : EntitySystem
                 else
                     station.Comp.EvacuatedCrew++;
             }
+
         }
     }
 }

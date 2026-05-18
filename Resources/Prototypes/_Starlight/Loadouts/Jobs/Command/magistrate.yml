@@ -35,7 +35,7 @@
 - type: loadout
   id: MagistrateHeadPwig
   equipment:
-    head: ClothingHeadHatPwig
+    outerClothing: ClothingHeadHatPwig
 
 #Eyewear
 - type: loadout

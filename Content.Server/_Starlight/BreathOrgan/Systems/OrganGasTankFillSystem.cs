@@ -66,7 +66,7 @@ public sealed class OrganGasTankFillSystem : EntitySystem
 
     private void FillOrganGasTanks(
         Entity<GasCanisterComponent> canister,
-        EntityUid _,
+        EntityUid user,
         List<Entity<GasTankComponent, OrganGasTankFillableComponent, OrganComponent>> organTanks)
     {
         // Check if the canister has any moles

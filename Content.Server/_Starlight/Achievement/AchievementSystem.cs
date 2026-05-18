@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using Content.Server._NullLink.Helpers;
 using Content.Server._NullLink.PlayerData;
+using Content.Server.Chat;
 using Content.Server.Nuke;
 using Content.Shared._Starlight.Antags.Vampires;
 using Content.Shared._Starlight.Antags.Vampires.Components;
 using Content.Shared._Starlight.Achievement;
 using Content.Shared.GameTicking;
+using Content.Shared.Interaction.Events;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
@@ -28,7 +30,7 @@ public sealed class AchievementSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
 
-    private static readonly TimeSpan _achievementHydrationRetryDelay = TimeSpan.FromSeconds(3);
+    private static readonly TimeSpan AchievementHydrationRetryDelay = TimeSpan.FromSeconds(3);
     private readonly Dictionary<Guid, Dictionary<string, double>> _roundProgress = [];
     private readonly HashSet<Guid> _achievementFetchInFlight = [];
 
@@ -148,7 +150,9 @@ public sealed class AchievementSystem : EntitySystem
         => GetProgress(session.UserId, progressType);
 
     public double GetProgress(Guid userId, string progressType)
-        => _nullLinkPlayers.GetCachedAchievementProgress(userId, progressType);
+    {
+        return _nullLinkPlayers.GetCachedAchievementProgress(userId, progressType);
+    }
 
     public void ResetProgress(ICommonSession session, string? progressType = null)
         => ResetProgress(session.UserId, progressType);
@@ -160,8 +164,12 @@ public sealed class AchievementSystem : EntitySystem
     }
 
     public async ValueTask<bool> TryUnlockAtProgressAsync(ICommonSession session, string achievementId, string progressType, double requiredProgress, string? characterName = null)
-        => GetProgress(session, progressType) >= requiredProgress
-        && await TryUnlockAchievementAsync(session, achievementId, characterName);
+    {
+        if (GetProgress(session, progressType) < requiredProgress)
+            return false;
+
+        return await TryUnlockAchievementAsync(session, achievementId, characterName);
+    }
 
     public void CheckProgressAchievements(ICommonSession session, string progressType, string? characterName = null)
         => CheckProgressAchievementsAsync(session, progressType, characterName)
@@ -277,7 +285,9 @@ public sealed class AchievementSystem : EntitySystem
     }
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
-        => _roundProgress.Clear();
+    {
+        _roundProgress.Clear();
+    }
     #endregion
 
     #region Round Progress
@@ -352,7 +362,7 @@ public sealed class AchievementSystem : EntitySystem
             return;
         }
 
-        Timer.Spawn(_achievementHydrationRetryDelay, () =>
+        Timer.Spawn(AchievementHydrationRetryDelay, () =>
         {
             if (!_playerManager.TryGetSessionById(new NetUserId(userId), out var retrySession))
                 return;

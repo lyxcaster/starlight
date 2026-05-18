@@ -19,7 +19,6 @@
       - MindRoleSELFAgent
       briefing:
         sound: "/Audio/_Starlight/Ambience/Antag/self_greeting.ogg"
-      allowNonHumans: true
   - type: DynamicRuleCost
     cost: 70
 
@@ -136,6 +135,5 @@
         components:
         - AntagImmune
       lateJoinAdditional: false
-      allowNonHumans: true
       mindRoles:
       - MindRoleTraitor

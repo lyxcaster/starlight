@@ -1,5 +1,6 @@
 using Content.Server.Chat.Systems;
 using Content.Server.Hands.Systems;
+using Content.Server.Speech;
 using Content.Server.Speech.Components;
 using Content.Shared.Chat;
 using Content.Shared.Paper;
@@ -8,6 +9,7 @@ using Content.Shared.Starlight.TextToSpeech;
 using Content.Shared._Starlight.TapeRecorder;
 using Content.Shared._Starlight.TapeRecorder.Components;
 using Content.Shared._Starlight.TapeRecorder.Events;
+using Robust.Server.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using System.Text;

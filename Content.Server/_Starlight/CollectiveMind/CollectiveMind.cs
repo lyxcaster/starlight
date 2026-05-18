@@ -1,7 +1,15 @@
 using Content.Shared.CollectiveMind;
+using Content.Shared.Tag;
+using Robust.Shared.Prototypes;
+using Robust.Shared.GameObjects;
+using Content.Shared.GameTicking;
+using Robust.Shared.Utility;
+using Content.Server.Speech;
 using Content.Server.Speech.EntitySystems;
+using Content.Shared.FixedPoint;
 using Robust.Shared.Random;
 using System.Text;
+using Content.Shared.Stunnable;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Bed.Sleep;
@@ -11,7 +19,6 @@ namespace Content.Server.CollectiveMind;
 public sealed partial class CollectiveMind : SharedCollectiveMindSystem
 {
     [Dependency] private readonly IRobustRandom _random = default!;
-    private const string CorruptionAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public override void Initialize()
     {
         base.Initialize();
@@ -71,15 +78,19 @@ public sealed partial class CollectiveMind : SharedCollectiveMindSystem
     }
 
     private string CorruptRandom()
+    {
         //const string punctuation = "\"\\`~!@#$%^&*()_+-={}[]|\\;:<>,.?/";
-        => CorruptionAlphabet[_random.NextByte((byte)CorruptionAlphabet.Length)].ToString();
+        const string ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return ran[_random.NextByte((byte)ran.Length)].ToString();
+    }
 
     private string CorruptRandomMultiple(int repeats)
     {
-        var corrupted = "";
-        for (var repeat = 0; repeat < repeats; repeat++)
+        string corrupted = "";
+        for (int repeat = 0; repeat < repeats; repeat++)
         {
-            return CorruptionAlphabet[_random.NextByte((byte)CorruptionAlphabet.Length)].ToString();
+            const string ran = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            corrupted += ran[_random.NextByte((byte)ran.Length)].ToString();
         }
         return corrupted;
     }

@@ -133,6 +133,7 @@ public sealed class PsychicScreachRule : StationEventSystem<PsychicScreachRuleCo
                 else
                     todrain = 0;
 
+
                 _batterySystem.SetCharge((ent, battery), todrain);
             }
         });

@@ -128,7 +128,6 @@ public sealed class CrewMonitoringServerSystem : EntitySystem
                 [DeviceNetworkConstants.Command] = DeviceNetworkConstants.CmdUpdatedState,
                 [SuitSensorConstants.NET_PAGING_SINCE] = pagingStatus.FirstSeen,
                 [SuitSensorConstants.NET_JOB_DEPARTMENTS] = sensor.JobDepartments,
-                [SuitSensorConstants.NET_FACTION] = sensor.Faction, // Starlight
             }, device: device);
         }
 

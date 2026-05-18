@@ -1,5 +1,7 @@
 using Content.Shared._Starlight.CosmicCult.Components;
 using Content.Shared.EntityEffects;
+using Robust.Shared.GameObjects;
+using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Starlight.CosmicCult;

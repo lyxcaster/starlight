@@ -5,7 +5,7 @@
     "y": 32
   },
   "license": "Custom",
-  "copyright": "STARLIGHT, borgi by Swonkus (github)",
+  "copyright": "STARLIGHT",
   "states": [
     {
       "name": "clown_ian",
@@ -13,14 +13,6 @@
     },
     {
       "name": "clown_ian_dead"
-    },
-    {
-      "name": "Borgi",
-      "directions": 4
-    },
-    {
-      "name": "corgitag",
-      "directions": 4
     }
   ]
 }

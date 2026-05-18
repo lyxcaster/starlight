@@ -1,4 +1,5 @@
 using Content.Shared.Implants.Components;
+using Content.Shared._Starlight.Language;
 using Content.Shared._Starlight.Language.Components;
 using Content.Shared._Starlight.Language.Events;
 using Content.Shared._Starlight.Language.Systems;

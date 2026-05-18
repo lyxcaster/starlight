@@ -13,6 +13,8 @@ namespace Content.Server._Starlight.Cargo.MailCompanion;
 
 public sealed class MailCompanionSystem : EntitySystem
 {
+    private static readonly TimeSpan SensorDataTimeout = TimeSpan.FromSeconds(10);
+
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -304,7 +306,7 @@ public sealed class MailCompanionSystem : EntitySystem
         if (component.LastSensorDataReceivedAt == TimeSpan.Zero)
             return;
 
-        if (component.LastSensorDataReceivedAt + component.SensorTimeout > _timing.CurTime)
+        if (component.LastSensorDataReceivedAt + SensorDataTimeout > _timing.CurTime)
             return;
 
         component.ConnectedSensors.Clear();
@@ -334,7 +336,8 @@ public sealed class MailCompanionSystem : EntitySystem
     }
 
     private string GetPopupForStatus(MailCompanionStatus status)
-    => status switch
+    {
+        return status switch
         {
             MailCompanionStatus.SensorsOff => Loc.GetString("mail-companion-popup-sensors-off"),
             MailCompanionStatus.TrackingUnavailable => Loc.GetString("mail-companion-popup-tracking-disabled"),
@@ -344,5 +347,6 @@ public sealed class MailCompanionSystem : EntitySystem
             MailCompanionStatus.DeliveryAlreadyOpened => Loc.GetString("mail-companion-popup-delivery-opened-already"),
             MailCompanionStatus.Expired => Loc.GetString("mail-companion-popup-expired"),
             _ => Loc.GetString("mail-companion-popup-recipient-unavailable"),
-    };
+        };
+    }
 }

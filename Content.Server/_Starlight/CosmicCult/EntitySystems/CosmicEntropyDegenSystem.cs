@@ -1,6 +1,9 @@
+using Content.Shared.Damage;
+using Content.Shared.Popups;
 using Content.Shared.StatusEffectNew.Components;
 using Content.Shared.StatusEffectNew;
 using Content.Shared._Starlight.CosmicCult.Components;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Shared.Damage.Systems;
 
@@ -16,7 +19,9 @@ public sealed partial class CosmicEntropyDegenSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageable = default!;
 
     public override void Initialize()
-        => SubscribeLocalEvent<CosmicEntropyDebuffStatusEffectComponent, StatusEffectAppliedEvent>(OnInit);
+    {
+        SubscribeLocalEvent<CosmicEntropyDebuffStatusEffectComponent, StatusEffectAppliedEvent>(OnInit);
+    }
 
     private void OnInit(Entity<CosmicEntropyDebuffStatusEffectComponent> ent, ref StatusEffectAppliedEvent args)
     {

@@ -1,10 +1,12 @@
 using Content.Server._Starlight.Silicons;
 using Content.Server.Antag;
 using Content.Server.Popups;
+using Content.Shared.Radio.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Mind;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.NPC;
+using Content.Shared.Radio;
 using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Silicons.Laws.Components;
 using Content.Shared._Starlight.CosmicCult.Components;
@@ -31,7 +33,7 @@ public sealed class CosmicFragmentationSystem : EntitySystem
     [Dependency] private readonly LanguageSystem _languageSystem = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
-    private readonly ProtoId<LanguagePrototype> _cultLanguage = "Cosmic";
+    private ProtoId<LanguagePrototype> _cultLanguage = "Cosmic";
 
     public override void Initialize()
     {

@@ -73,11 +73,6 @@
   - MaidOutfitTactical
   - MaidHeadbandTactical
   - TacticalMaidGloves
-  - CoderSocks
-  - PawBootTrinket
-  - CatEars
-  - BunnyEars
-  - DogEars
   - ClothWrapGloveTrinket
   - ClothWrapShoeTrinket
   - RollerSkates
@@ -212,7 +207,6 @@
   - CaptainCloak
   - CaptainCloakFormal
   - CaptainMantle
-  - CaptainBoatCloak #DeltaV
 
 - type: loadoutGroup
   id: CaptainBackpack
@@ -252,7 +246,6 @@
   minLimit: 0
   loadouts:
   - HoPHead
-  - HopHeadFormal # Delta V
 
 - type: loadoutGroup
   id: HoPJumpsuit
@@ -262,8 +255,6 @@
   - HoPJumpskirt
   - HoPTurtleneckJumpsuit # afterlight
   - HoPTurtleneckJumpskirt # afterlight
-  - HopFormalSuit # DeltaV
-  - HopFormalSkirt # DeltaV
 
 - type: loadoutGroup
   id: HoPNeck
@@ -272,7 +263,6 @@
   loadouts:
   - HoPCloak
   - HoPMantle
-  - HopCloakFormal # DeltaV
 
 - type: loadoutGroup
   id: HoPBackpack
@@ -928,7 +918,6 @@
   - QuartermasterTurtleneck
   - QuartermasterTurtleneckSkirt
   - QuartermasterFormalSuit
-  - QuartermasterFormalSkirt # DeltaV
 
 - type: loadoutGroup
   id: QuartermasterNeck
@@ -985,7 +974,6 @@
   - CargoTechnicianJumpsuitFormal
   - CargoTechnicianJumpskirtFormal # afterlight end
   - CargoTechnicianOveralls # Starlight
-  - CargoTechnicianJumpsuitInformal # DeltaV
 
 - type: loadoutGroup
   id: CargoTechnicianBackpack
@@ -1364,7 +1352,6 @@
   minLimit: 0
   loadouts:
   - RegularLabCoat
-  - RegularLabCoatLong # DeltaV
   - ScienceLabCoat
   - ScienceWintercoat
   - RoboticistLabCoat
@@ -1456,8 +1443,6 @@
   - ClothingNeckCloakHosRetro #STARLIGHT
   - HeadofSecurityCloak
   - HeadofSecurityMantle
-  - HeadofSecurityBoatCloak #DeltaV
-  - HeadofSecurityRobe #DeltaV
 
 - type: loadoutGroup
   id: HeadofSecurityOuterClothing

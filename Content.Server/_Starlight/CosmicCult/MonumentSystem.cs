@@ -6,11 +6,14 @@ using Content.Server.Atmos.Components;
 using Content.Server.Audio;
 using Content.Server.Chat.Systems;
 using Content.Server._Starlight.Shuttles;
+using Content.Server._Starlight.Silicons;
 using Content.Shared.Starlight.CCVar;
 using Content.Shared._Starlight.CosmicCult;
 using Content.Shared._Starlight.CosmicCult.Components;
 using Content.Shared._Starlight.CosmicCult.Prototypes;
 using Content.Shared.Audio;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
@@ -44,8 +47,8 @@ public sealed class MonumentSystem : SharedMonumentSystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
-    private static readonly EntProtoId _cosmicGod = "MobCosmicGodSpawn";
-    private static readonly EntProtoId _monumentCollider = "MonumentCollider";
+    private static readonly EntProtoId CosmicGod = "MobCosmicGodSpawn";
+    private static readonly EntProtoId MonumentCollider = "MonumentCollider";
 
     private EntityUid? _monumentStorageMap;
 
@@ -57,6 +60,7 @@ public sealed class MonumentSystem : SharedMonumentSystem
         SubscribeLocalEvent<MonumentComponent, InteractUsingEvent>(OnInfuseHeldEntropy);
         SubscribeLocalEvent<MonumentComponent, ActivateInWorldEvent>(OnInfuseEntropy);
     }
+
 
     public override void Update(float frameTime) // This Update() can fit so much functionality in it
     {
@@ -95,7 +99,7 @@ public sealed class MonumentSystem : SharedMonumentSystem
                     victoryComp.Victory = true;
                 }
 
-                Spawn(_cosmicGod, Transform(uid).Coordinates);
+                Spawn(CosmicGod, Transform(uid).Coordinates);
                 comp.CurrentState = FinaleState.Victory;
             }
         }
@@ -145,6 +149,7 @@ public sealed class MonumentSystem : SharedMonumentSystem
                 uiComp.Key = null; //kazne called this the laziest way to disable a UI ever
             }
         }
+
     }
 
     private void OnMonumentPhaseOut(Entity<MonumentComponent> ent)
@@ -176,7 +181,7 @@ public sealed class MonumentSystem : SharedMonumentSystem
         var xform = Transform(ent);
         _transform.SetCoordinates(ent.Comp.Monument.Value, xform.Coordinates);
         _transform.AnchorEntity(ent.Comp.Monument.Value); //no idea if this does anything but let's be safe about it
-        Spawn(_monumentCollider, xform.Coordinates);
+        Spawn(MonumentCollider, xform.Coordinates);
 
         if (TryComp<CosmicCorruptingComponent>(ent.Comp.Monument.Value, out var cosmicCorruptingComp))
             _corrupting.RecalculateStartingTiles((ent.Comp.Monument.Value, cosmicCorruptingComp));
@@ -193,10 +198,14 @@ public sealed class MonumentSystem : SharedMonumentSystem
     }
 
     public void PhaseOutMonument(Entity<MonumentComponent> ent)
-        => ent.Comp.PhaseOutTimer = _timing.CurTime + ent.Comp.PhaseOutDelay;
+    {
+        ent.Comp.PhaseOutTimer = _timing.CurTime + TimeSpan.FromSeconds(0.45);
+    }
 
     public void UpdateMonumentProgress(Entity<MonumentComponent> ent, Entity<CosmicCultRuleComponent> cult)
-        => ent.Comp.CurrentProgress = ent.Comp.TotalEntropy + (cult.Comp.TotalCult * _config.GetCVar(StarlightCCVars.CosmicCultistEntropyValue));
+    {
+        ent.Comp.CurrentProgress = ent.Comp.TotalEntropy + cult.Comp.TotalCult * _config.GetCVar(StarlightCCVars.CosmicCultistEntropyValue);
+    }
 
     private void OnInfuseEntropy(Entity<MonumentComponent> uid, ref ActivateInWorldEvent args)
     {
@@ -308,16 +317,24 @@ public sealed class MonumentSystem : SharedMonumentSystem
     }
 
     public void SetCanTierUp(Entity<MonumentComponent> ent, bool canTierUp)
-        => ent.Comp.CanTierUp = canTierUp;
+    {
+        ent.Comp.CanTierUp = canTierUp;
+    }
 
     public void SetTargetProgess(Entity<MonumentComponent> ent, int targetProgress)
-        => ent.Comp.TargetProgress = targetProgress;
+    {
+        ent.Comp.TargetProgress = targetProgress;
+    }
 
     public void Disable(Entity<MonumentComponent> ent)
-        => ent.Comp.Enabled = false;
+    {
+        ent.Comp.Enabled = false;
+    }
 
     public void Enable(Entity<MonumentComponent> ent)
-        => ent.Comp.Enabled = true;
+    {
+        ent.Comp.Enabled = true;
+    }
 
     public void MonumentTier1(Entity<MonumentComponent> uid)
     {

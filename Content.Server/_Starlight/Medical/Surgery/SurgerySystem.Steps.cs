@@ -7,16 +7,19 @@ using Content.Shared.Body.Components;
 using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
+using Content.Shared.Damage;
 using Content.Shared.Humanoid;
 using Content.Shared.Traits.Assorted;
 using Content.Shared.Bed.Sleep;
+using Microsoft.CodeAnalysis;
 using Content.Server._Starlight.Medical.Limbs;
 using Content.Server.Administration.Systems;
 using Robust.Shared.Timing;
 using Content.Shared.Damage.Components;
 using Content.Shared._Starlight.Medical.Body.Systems;
 
-namespace Content.Server._Starlight.Medical.Surgery;
+
+namespace Content.Server.Starlight.Medical.Surgery;
 // Based on the RMC14.
 // https://github.com/RMC-14/RMC-14
 //
@@ -25,7 +28,7 @@ namespace Content.Server._Starlight.Medical.Surgery;
 //However, I don’t want to touch the official systems, so I need to come up with extensions for them.
 public sealed partial class SurgerySystem : SharedSurgerySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IGameTiming Timing = default!;
     [Dependency] private readonly LimbSystem _limbSystem = default!;
     [Dependency] private readonly StarlightEntitySystem _entity = default!;
     [Dependency] private readonly SharedBloodstreamSystem _bloodstreamSystem = default!;
@@ -56,10 +59,10 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
         var query = EntityQueryEnumerator<IncisionOpenComponent>();
         while (query.MoveNext(out var uid, out var incision))
         {
-            if (_timing.CurTime < incision.NextUpdate)
+            if (Timing.CurTime < incision.NextUpdate)
                 continue;
 
-            incision.NextUpdate = _timing.CurTime + incision.UpdateInterval;
+            incision.NextUpdate = Timing.CurTime + incision.UpdateInterval;
 
             var patient = Transform(uid).ParentUid;
 
@@ -177,7 +180,7 @@ public sealed partial class SurgerySystem : SharedSurgerySystem
             || !TryComp(args.Body, out HumanoidAppearanceComponent? humanoid)
             || !_limbSystem.AttachLimb((args.Body, humanoid), slot, (args.Part, part), (limdId, limb));
 
-    private void OnStepAttachItemComplete(Entity<SurgeryStepAttachLimbEffectComponent> _, string slot, ref SurgeryStepEvent args)
+    private void OnStepAttachItemComplete(Entity<SurgeryStepAttachLimbEffectComponent> ent, string slot, ref SurgeryStepEvent args)
         => args.IsCancelled = args.Tools.Count == 0
             || !(args.Tools.FirstOrDefault() is var itemId)
             || !TryComp(itemId, out MetaDataComponent? metadata)

@@ -1,5 +1,6 @@
 using Content.Server.Actions;
 using Content.Server.Station.Systems;
+using Content.Shared.Eye;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Pinpointer;
@@ -35,6 +36,7 @@ public sealed partial class RemoteEyeSystem : SharedRemoteEyeSystem
     [Dependency] private readonly SharedVirtualItemSystem _virtualItem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private readonly SharedPowerReceiverSystem _power = default!;
+    [Dependency] private readonly TransformSystem _transform = default!;
 
     public override void Initialize()
     {
